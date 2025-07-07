@@ -30,26 +30,30 @@
           install-emsdk-offline = pkgs.writeShellScriptBin "install-emsdk-offline" ''
             # Copy emsdk files to current directory
 
-            if [ -e emsdk ]; then
-              echo "emsdk already exists" 2>&1
+            dest="''${1:-''${PWD:-.}/emsdk}"
+
+            if [ -e "$dest" ]; then
+              echo "'$dest' already exists" 2>&1
             fi
 
-            cp -r "${self.packages.${system}.emsdk-offline}/share/emsdk" emsdk
-            chmod u+rwX -R emsdk
+            cp -r "${self.packages.${system}.emsdk-offline}/share/emsdk" "$dest"
+            chmod u+rwX -R "$dest"
           '';
 
           install-emscripten-cache = pkgs.writeShellScriptBin "install-emscripten-cache" ''
             # Copy emscripten cache to current directory
 
-            if [ -e .emscripten-cache ]; then
-              echo ".emscripten-cache already exists" 2>&1
+            dest="''${1:-''${PWD:-.}/.emscripten-cache}"
+
+            if [ -e "$dest" ]; then
+              echo "'$dest' already exists" 2>&1
             fi
 
-            cp -r ${pkgs.emscripten}/share/emscripten/cache/ .emscripten-cache
-            chmod u+rwX -R .emscripten-cache
+            cp -r ${pkgs.emscripten}/share/emscripten/cache/ "$dest"
+            chmod u+rwX -R "$dest"
 
             # Only works if this script was `source`d
-            export EM_CACHE=$PWD/.emscripten-cache
+            export EM_CACHE="$dest"
           '';
         };
 
